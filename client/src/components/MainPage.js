@@ -1,136 +1,57 @@
-import React, { useEffect, useState } from "react";
-import ReactTable from "react-table-v6";
-import "react-table-v6/react-table.css";
-import Modal from './Modal';
-const datahard = [
-  {
-    id: 1,
-    timestamp: "2022-03-28T10:00:00.000Z",
-    location: "123 Main St.",
-    message:"i am in danger please save me",
-    personname: "Nikhila"
-  },
-  {
-    id: 2,
-    timestamp: "2022-03-28T11:00:00.000Z",
-    location: "456 Elm St.",
-    message:"i am in danger please save me",
-    personname: "Mobeen"
-  },
-  {
-    id: 3,
-    timestamp: "2022-03-28T12:00:00.000Z",
-    location: "789 Oak St.",
-    message:"i am in danger please save me",
-    personname: "Nikhil"
-  },
-  {
-    id: 4,
-    timestamp: "2022-03-28T13:00:00.000Z",
-    location: "789 Oak St.",
-    message:"i am in danger please save me",
-    personname: "akhil"
-  },
-];
+import React from "react";
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+} from "recharts";
 
-const columns = [
-  {
-    Header: "Person ID",
-    accessor: "id",
-  },
-  {
-    Header: "personName",
-    accessor: "personname",
-  },
-  {
-    Header: "Location",
-    accessor: "location",
-  },
-    {
-    Header: "message",
-    accessor: "message",
-  },
-   {
-    Header: "Time and date",
-    accessor: "timestamp",
-  },
-];
-const columns2 = [
-  {
-    Header: "Contact Person Name",
-    accessor: "name",
-  },
-  {
-    Header: "Contact person relation",
-    accessor: "relation",
-  },
-  {
-    Header: "contact person ID",
-    accessor: "id",
-  },
-    {
-    Header: "contact details",
-    accessor: "phone",
-  },
-   
-];
-const data2 = [
-  {
-    id: 1,
-    phone: "940321654",
-    relation: "father",
-    name:"ramanujam",
-  }
-];
+const MainPage = ({ data, arrayOfMessages }) => {
+  const { x, y, z } = data;
+  console.log("data coming here", arrayOfMessages);
+  const transformStyle = `translate3d(${x * 10}px, ${y * 10}px, ${z * 10}px)`;
 
-
-const MainPage = ({arrayOfMessages, data}) => {
- const [contactData, setContactData] = useState([])
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [aletsData, setAlertData] = useState([])
-  useEffect(()=>{
-    if(arrayOfMessages.length){
-setAlertData([...arrayOfMessages, data]);
-const contactDataOfStudent=  contactData.filter((e)=>{ 
-
- return e.id*1===data.id*1
-})
-console.log("the contact data ", contactDataOfStudent)
-let getPhoneNumberMessages = ""
-contactDataOfStudent.forEach((e)=>{
-getPhoneNumberMessages= getPhoneNumberMessages + "  " + e.phone + "  " 
-})
-const lastMsg= arrayOfMessages[arrayOfMessages.length-1]
-const msgString = lastMsg.personname + "is in danger" + "and is in the locaiton " + lastMsg.location + "their personalized message is " + lastMsg.message + "their id is" +lastMsg.id + "sending messages to... " + getPhoneNumberMessages 
-alert("new alert **** "+msgString)
-//TODO need tointegrate external API for SMS service
-    }
-
-  },[arrayOfMessages, data])
-  const handleOpenModal = () => {
-    setIsModalOpen(true);
-  };
-  console.log("show this too", arrayOfMessages)
   return (
-    <div className="landing-page">
-      <nav className="nav-options">
-      <button onClick={handleOpenModal}>Add contacts</button>
-         <button onClick={()=>{setContactData([])}}>Clear Contacts Data</button>
-      </nav>
-      {isModalOpen && <Modal data={contactData} setData={setContactData} studentData={datahard}closeModal={() => setIsModalOpen(false)} />}
-      <div className="main-area">
-        Contact Info
-        <div style={{height:"300px",  overflow:"auto"}}>
-        <ReactTable data={contactData} columns={columns2} />
-        </div>
-             <div style={{height:"300px",  overflow:"auto"}}>
-        Details of the Alerts: 
-
-        <ReactTable data={aletsData} columns={columns} />
-        </div>
+    <div>
+      the Values from the hardware comming here{" "}
+      <h1>
+        {" "}
+        x: {x} y : {y} z: {z}
+      </h1>
+      <div
+        style={{
+          width: "50px",
+          height: "50px",
+          backgroundColor: "red",
+          transform: transformStyle,
+        }}
+      ></div>
+      <svg width="200" height="200" style={{ transform: transformStyle }}>
+        <line
+          x1={`${x * 10}`}
+          y1={`${y * 10}`}
+          x2="200"
+          y2="100"
+          stroke="black"
+        />
+      </svg>
+      <div>
+        <LineChart width={800} height={400} data={arrayOfMessages}>
+          <XAxis dataKey="name" />
+          <YAxis />
+          <CartesianGrid stroke="#eee" strokeDasharray="5 5" />
+          <Tooltip />
+          <Legend />
+          <Line type="monotone" dataKey="x" stroke="#8884d8" />
+          <Line type="monotone" dataKey="y" stroke="#82ca9d" />
+          <Line type="monotone" dataKey="z" stroke="#ffc658" />
+        </LineChart>
       </div>
     </div>
   );
-}; 
+};
 
 export default MainPage;
